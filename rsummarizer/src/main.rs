@@ -42,8 +42,8 @@ fn main() -> Result<(), Error> {
 
     let result = session.run(input_tensor)?;
 
-    let output = &result[0];
-    println!("Output shape: {:?}", output);
+    let output_tensor = &result[0];
+    println!("Output shape: {:?}", output_tensor);
     let output_ids: Vec<i64> = output_tensor
         .iter()
         .enumerate()
