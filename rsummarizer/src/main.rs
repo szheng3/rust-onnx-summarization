@@ -40,26 +40,39 @@ fn main() -> Result<(), Error> {
 
     let input_tensor = vec![input_arr.into_dyn(), mask_arr.into_dyn()];
 
-    // Run inference on the model
-    let output_tensors: Vec<OrtOwnedTensor<f32, _>> = session.run(input_tensor)?;
+    let result = session.run(inputs, outputs).unwrap();
 
-    let output_tensor = &output_tensors[0];
-    // Get the shape of the output tensor
-    let output_shape = output_tensor.shape();
-
-    // Get the last dimension of the output tensor
-    let vocab_size = output_shape.last().unwrap();
-
-    // Get the argmax of the output tensor along the last
-    let output_ids: Vec<i64> = output_tensor
+    let output = result.get(0).unwrap();
+    let summary_ids: Vec<u32> = output
         .iter()
-        .enumerate()
-        .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap_or(Ordering::Equal))
-        .map(|(idx, _)| idx as i64 % *vocab_size as i64)
-        .into_iter()
+        .map(|&value| value as u32)
         .collect();
-    let output_text = tokenizer.decode(&output_ids, true, true);
-    println!("Output text: {}", output_text);
+
+    let decoded_summary = tokenizer.decode(summary_ids, true, true).unwrap();
+
+    println!("Summary: {}", decoded_summary);
+
+    // Run inference on the model
+    // let output_tensors: Vec<OrtOwnedTensor<f32, _>> = session.run(input_tensor)?;
+
+
+    // let output_tensor = &output_tensors[0];
+    // // Get the shape of the output tensor
+    // let output_shape = output_tensor.shape();
+    //
+    // // Get the last dimension of the output tensor
+    // let vocab_size = output_shape.last().unwrap();
+    //
+    // // Get the argmax of the output tensor along the last
+    // let output_ids: Vec<i64> = output_tensor
+    //     .iter()
+    //     .enumerate()
+    //     .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap_or(Ordering::Equal))
+    //     .map(|(idx, _)| idx as i64 % *vocab_size as i64)
+    //     .into_iter()
+    //     .collect();
+    // let output_text = tokenizer.decode(&output_ids, true, true);
+    // println!("Output text: {}", output_text);
 
     Ok(())
 }
