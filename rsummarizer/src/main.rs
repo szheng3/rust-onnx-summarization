@@ -42,7 +42,7 @@ fn main() -> Result<(), Error> {
 
     let result = session.run(input_tensor)?;
 
-    let output = result[0].unwrap();
+    let output = &result[0];
     let summary_ids: Vec<u32> = output
         .iter()
         .map(|&value| value as u32)
