@@ -43,12 +43,16 @@ fn main() -> Result<(), Error> {
     let result = session.run(input_tensor)?;
 
     let output = &result[0];
-    let summary_ids: Vec<u32> = output
+    println!("Output shape: {:?}", output);
+    let output_ids: Vec<i64> = output_tensor
         .iter()
-        .map(|&value| value as u32)
+        .enumerate()
+        .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap_or(Ordering::Equal))
+        .map(|(idx, _)| idx as i64 % *vocab_size as i64)
+        .into_iter()
         .collect();
 
-    let decoded_summary = tokenizer.decode(summary_ids, true, true);
+    let decoded_summary = tokenizer.decode(output_ids, true, true);
 
     println!("Summary: {}", decoded_summary);
 
