@@ -25,7 +25,7 @@ fn main() -> Result<(), Error> {
     let tokenizer = Gpt2Tokenizer::from_file(vocab_path, merges_path, false).unwrap();
 
     // Tokenize the input text
-    let input_text = "Hello world! This is a sample input text.";
+    let input_text = "Hello";
     //  let tokens = sp.encode(input_text, None, 5, &TruncationStrategy::LongestFirst, 0);
     let encoding = tokenizer.encode(input_text, None, 5, &TruncationStrategy::LongestFirst, 0);
 
