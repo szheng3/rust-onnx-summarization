@@ -40,7 +40,7 @@ fn main() -> Result<(), Error> {
 
     let input_tensor = vec![input_arr.into_dyn(), mask_arr.into_dyn()];
 
-    let result = session.run(input_tensor)?;
+    // let result = session.run(input_tensor)?;
 
     // let output_tensor = &result[0];
     // println!("Output shape: {:?}", output_tensor);
