@@ -52,7 +52,9 @@ fn main() -> Result<(), Error> {
         .into_iter()
         .collect();
 
-    let decoded_summary = tokenizer.decode(output_ids, true, true);
+
+
+    let decoded_summary = tokenizer.decode(&output_ids, true, true);
 
     println!("Summary: {}", decoded_summary);
 
