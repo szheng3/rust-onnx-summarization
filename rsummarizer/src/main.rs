@@ -5,7 +5,7 @@ use std::cmp::Ordering;
 
 type Error = Box<dyn std::error::Error>;
 
-static MODEL_BYTES: &[u8] = include_bytes!("../out/model.onnx");
+static MODEL_BYTES: &[u8] = include_bytes!("/home/shuai/rust-onnx-summarization/out/model.onnx");
 
 fn main() -> Result<(), Error> {
     // Load the GPT-2 model in the ONNX format
@@ -20,8 +20,8 @@ fn main() -> Result<(), Error> {
         .with_model_from_memory(MODEL_BYTES)?;
 
     // Initialize the GPT-2 tokenizer
-    let vocab_path = "out/vocab.json";
-    let merges_path = "out/merges.txt";
+    let vocab_path = "/home/shuai/rust-onnx-summarization/out/vocab.json";
+    let merges_path = "/home/shuai/rust-onnx-summarization/out/merges.txt";
     let tokenizer = Gpt2Tokenizer::from_file(vocab_path, merges_path, false).unwrap();
 
     // Tokenize the input text
@@ -40,15 +40,15 @@ fn main() -> Result<(), Error> {
 
     let input_tensor = vec![input_arr.into_dyn(), mask_arr.into_dyn()];
 
-    let result = session.run(inputs, outputs).unwrap();
+    let result = session.run(input_tensor)?;
 
-    let output = result.get(0).unwrap();
+    let output = result[0].unwrap();
     let summary_ids: Vec<u32> = output
         .iter()
         .map(|&value| value as u32)
         .collect();
 
-    let decoded_summary = tokenizer.decode(summary_ids, true, true).unwrap();
+    let decoded_summary = tokenizer.decode(summary_ids, true, true);
 
     println!("Summary: {}", decoded_summary);
 
