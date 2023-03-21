@@ -63,6 +63,8 @@ fn main() -> Result<(), Error> {
 
 
     let output_tensor = &output_tensors[0];
+    println!("Output shape: {:?}", output_tensor);
+
     // Get the shape of the output tensor
     let output_shape = output_tensor.shape();
 
